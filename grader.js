@@ -44,7 +44,7 @@ var assertIsUrl = function(url) {
     return instr;
 };
 
-var cheerioHtmlFile = function(htmlfile) {
+var readHtmlFile = function(htmlfile) {
     return cheerio.load(fs.readFileSync(htmlfile));
 };
 
@@ -53,7 +53,11 @@ var loadChecks = function(checksfile) {
 };
 
 var checkHtmlFile = function(htmlfile, checksfile) {
-    $ = cheerioHtmlFile(htmlfile);
+    checkHtmlContent(fs.readFileSync(htmlfile), checksfile);
+};
+
+var checkHtml = function(html, checksfile) {
+    $ = cheerio.load(html);
     var checks = loadChecks(checksfile).sort();
     var out = {};
     for(var ii in checks) {
@@ -62,7 +66,23 @@ var checkHtmlFile = function(htmlfile, checksfile) {
     }
     return out;
 };
+    
+var checkUrlContent = function(url, checksfile) {
+    rest.get(url).on('complete', function(result) {
+	if (result instanceof Error) {
+	    console.error('Error: ' + result.message);
+	} else {
+	    var checkJson = checkHtml(result, checksfile);
+	    check2console(checkJson);
+	}
+    });
+};
 
+var check2console = function(checkJson) {
+    var outJson = JSON.stringify(checkJson, null, 4);
+    console.log(outJson);
+};
+    
 var clone = function(fn) {
     // Workaround for commander.js issue.
     // http://stackoverflow.com/a/6772648
@@ -75,9 +95,12 @@ if(require.main == module) {
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
 	.option('-u, --url <url_address>', 'Resource url', clone(assertIstUrl), URL_DEFAULT)
         .Parse(process.argv);
-    var checkJson = checkHtmlFile(program.file, program.checks);
-    var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);
+    if (program.url) {
+	checkUrlContent(program.url, program.checks);
+    } else {
+	var checkJson = checkHtmlFile(program.file, program.checks);
+	check2console(checkJson);
+    }
 } else {
     exports.checkHtmlFile = checkHtmlFile;
 }
