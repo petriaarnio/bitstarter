@@ -24,11 +24,11 @@ References:
 var fs = require('fs');
 var program = require('commander');
 var cheerio = require('cheerio');
-var rest = require('rest');
+var rest = require('restler');
  
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
-var URL_DEFAULT = "http://fierce-reaches-1073.herokuapp.com"
+var URL_DEFAULT = null;
 
 var assertFileExists = function(infile) {
     var instr = infile.toString();
@@ -53,7 +53,7 @@ var loadChecks = function(checksfile) {
 };
 
 var checkHtmlFile = function(htmlfile, checksfile) {
-    checkHtmlContent(fs.readFileSync(htmlfile), checksfile);
+    return checkHtml(fs.readFileSync(htmlfile), checksfile);
 };
 
 var checkHtml = function(html, checksfile) {
@@ -93,9 +93,9 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-	.option('-u, --url <url_address>', 'Resource url', clone(assertIstUrl), URL_DEFAULT)
-        .Parse(process.argv);
-    if (program.url) {
+	.option('-u, --url <url_address>', 'Resource url', clone(assertIsUrl), URL_DEFAULT)
+        .parse(process.argv);
+    if (program.url != null) {
 	checkUrlContent(program.url, program.checks);
     } else {
 	var checkJson = checkHtmlFile(program.file, program.checks);
