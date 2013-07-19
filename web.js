@@ -7,7 +7,7 @@ app.get('/', function(request, response) {
     response.send(buffer.toString());
 });
 
-var port = process.env.PORT || 8080;
+var port =  8080;
 app.listen(port, function() {
   console.log("Listening on " + port);
 });
