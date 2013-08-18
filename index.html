@@ -23,7 +23,20 @@
        }
       }
 
- 
+      /* Landscape phones and down */
+      @media (max-width: 480px) {
+        .copy {
+          padding: 2.5% 10%;
+        }
+        .linediv-l {
+          border-bottom: 1px white solid;
+        }
+        .linediv-r {
+          border-top: 1px white solid;
+        }
+      }
+
+
       /* All form factors */
       /* Main body and headings */
       body {
@@ -61,14 +74,6 @@
         color: white;
       }
 
-      .thermometer, .order, .social {
-        /* line-height to vertically center: http://phrogz.net/css/vertical-align/index.html */
-        height: 40px;
-        line-height: 40px;
-      }
-      div.row {
-        border: 1px solid;
-      }
     </style>
   </head>
 
@@ -118,8 +123,41 @@
       </div>
       <div class="row-fluid pitch">
 	<div class="span5 offset1 video">
-	  <img class="img-polaroid" src="http://placeholder.it/480x300">
+	  <img class="img-polaroid" src="http://placehold.it/480x300">
 	</div>
+
+	<!-- We define a new 'actions' div to contains statistics, order, and share buttons. -->
+	<div class="span5 actions">
+	  <div class="span8 offset2">
+	    <div class="statistics">
+	      <div class="span4">
+		<!-- linediv-l and linediv-r give dividing lines that look
+		     different in horizontal and vertical layouts, illustrating
+		     media queries. -->
+		<div class="linediv-l">
+		  <h3>1000</h3> <p>backers</p>
+		</div>
+	      </div>
+	      <div class="span4">
+		<div class="linediv-c">
+		  <h3>$6000</h3> <p>of $10,000</p>
+		</div>
+	      </div>
+	      <div class="span4">
+		<div class="linediv-r">
+		  <h3>10</h3> <p>days left</p>
+		</div>
+	      </div>
+	    </div>
+	  </div>
+	  <div class="span10 offset1">
+	    <!-- Bootsrap progress bar -->
+	    <!-- http://twitter.github.io/bootstrap/components.html#progress -->
+	    <div class="thermometer progress active">
+	      <div class="bar bar-success" style="width: 60%;"></div>
+	      <div class="bar bar-warning" style="width: 40%;"></div>
+	    </div>
+	  </div>
 
       <div class="row heading">
         <div class="span12">
